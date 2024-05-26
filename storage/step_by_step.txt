@@ -1,0 +1,31 @@
+# Para executar a aplicação: 
+  a) docker-compose up -d (Levanta todos os containers/serviços localizados dentro do arquivo: docker-compose.yml)
+# Para executar o bash (pasta /var/www): 
+  a) docker-compose exec app bash
+# Para sair do bash (pasta /var/www): 
+  a) exit
+# Para ver os containers em execução: docker ps
+# Para parar um container em execução: docker stop nome_do_contaier (se possuir) OU docker stop id_do_container
+# Para executar um comando do artisan: Dentro do bash, executar o comando desejado: php artisan migrate OU php artisan make:controller NomeDoController
+# Para visualizar o logs de um container/serviço
+  a) docker logs laravel-10_db_1 -f
+# Para parar todos os containers/serviços de uma só vez
+  a) docker stop $(docker ps -a -q)
+
+
+
+# Para conectar ao serviço do mysql rodando via docker (O container/serviço, já deve está "levantado via: docker-compose up -d)
+  1 - docker exec -it <mysql container name> /bin/bash 
+  2 - Dentro do container, para conectar ao mysql digite a linha de comando: 
+      a) mysql -u root -p
+      b) digite a senha especificada para o usuário root especificado no arquivo .env do laravel, neste caso a senha é "root"
+  3 - Saiba quais bancos de dados estão atualmente criados na sua base
+      a) mysql> show databases;
+      b) mysql> use nome_do_banco (seleciona o banco para uso)
+      c) mysql> show tables (mostra as tabelas do banco em uso)
+  4 - Para apagar um banco de dados 
+      a) mysql> drop database <nome_do_banco>;
+  5 - Para mostrar a listagem dos hosts e seus respectivos usuários
+      a) mysql> select host, user from mysql.user;
+
+
