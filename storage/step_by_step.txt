@@ -11,6 +11,8 @@
   a) docker logs laravel-10_db_1 -f
 # Para parar todos os containers/serviços de uma só vez
   a) docker stop $(docker ps -a -q)
+# Para executar no browser:
+  a) http://localhost:8989 (Este é o conteúdo da variáveld e ambiente: APP_URL=http://localhost:8989 no arquivo .env)
 
 
 
