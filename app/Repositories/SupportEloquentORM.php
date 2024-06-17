@@ -13,7 +13,7 @@ class SupportEloquentORM implements SupportRepositoryInterface
 
     public function __construct(protected Support $model)
     {
-        
+
     }
 
     public function getAll(string $filter = null): array
@@ -59,10 +59,10 @@ class SupportEloquentORM implements SupportRepositoryInterface
        }
 
        $support->update(
-           array($dto)
+           (array) $dto
        );
 
-       return (object) $dto->toArray();
+       return (object) $support->toArray();
 
     }
 

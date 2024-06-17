@@ -31,3 +31,9 @@
       a) mysql> select host, user from mysql.user;
 
 
+
+# Site Projeto Completo
+  https://github.com/especializati/curso-de-laravel-10
+
+
+
