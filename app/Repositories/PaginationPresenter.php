@@ -19,6 +19,7 @@ class PaginationPresenter implements PaginationInterface
         //$this->items = $this->paginator->items();
         $this->items = $this->resolveItems($this->paginator->items());
     }
+
     /**
      * @return stdCalass[]
      */
@@ -54,7 +55,7 @@ class PaginationPresenter implements PaginationInterface
     }
     public function getNumberPreviousPage(): int
     {
-        return $this->paginator->currentPage() + 1;
+        return $this->paginator->currentPage() - 1;
     }
 
     private function resolveItems(array $items): array

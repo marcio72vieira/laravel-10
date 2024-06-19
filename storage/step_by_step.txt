@@ -31,6 +31,9 @@
       a) mysql> select host, user from mysql.user;
 
 
+# Para reexecutar uma migration, deve-se está dentro do "bash" do container da aplicação, como descrito abaixo:
+  1 - marcio@marcio72:~/projetosdocker/laravel-10$ docker-compose exec app bash
+  2 - yourusername@d6041e83f429:/var/www$ php artisan migrate:fresh
 
 # Site Projeto Completo
   https://github.com/especializati/curso-de-laravel-10

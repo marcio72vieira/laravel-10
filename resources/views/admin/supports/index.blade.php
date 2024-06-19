@@ -15,7 +15,7 @@
         @foreach ($supports->items() as $support)
             <tr>
                 <td>{{ $support->subject }}</td>
-                <td>{{ $support->status }}</td>
+                <td>{{ getStatusSupport($support->status) }}</td>
                 <td>{{ $support->body }}</td>
                 <td>
                     <a href="{{ route('supports.show', $support->id ) }}">Detalhe</a> |
@@ -26,4 +26,6 @@
     </tbody>
 </table>
 
-<x-pagination :paginator="$supports" />
+<x-pagination
+    :paginator="$supports"
+    :appends="$filters" />
