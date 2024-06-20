@@ -44,4 +44,8 @@
   https://github.com/especializati/curso-de-laravel-10
 
 
+  token atual:
+  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
+
+
 
