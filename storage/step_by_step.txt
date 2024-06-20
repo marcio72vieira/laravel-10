@@ -35,6 +35,11 @@
   1 - marcio@marcio72:~/projetosdocker/laravel-10$ docker-compose exec app bash
   2 - yourusername@d6041e83f429:/var/www$ php artisan migrate:fresh
 
+# Ao criar um helper e alterar o arquivo composer.json, execute o comando composer dump-autoload no bash da aplicação
+  1 - marcio@marcio72:~/projetosdocker/laravel-10$ docker-compose exec app bash
+  2 - yourusername@329e85e8dbe9:/var/www$ composer dump-autoload
+
+
 # Site Projeto Completo
   https://github.com/especializati/curso-de-laravel-10
 

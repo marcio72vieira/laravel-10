@@ -2,7 +2,7 @@
 
 <ul>
     <li>Assunto: {{ $support->subject }}</li>
-    <li>Status: {{ $support->status }}</li>
+    <li>Status: {{ getStatusSupport($support->status) }}</li>
     <li>Descrição: {{ $support->body }}</li>
 </ul>
 
