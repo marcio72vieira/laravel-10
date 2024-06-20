@@ -48,4 +48,23 @@
   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
 
 
+# (?) Learn how to resolve a blocked push https://docs.github.com/code-security/secret-scanning/pushing-a-branch-blocked-by-push-protection
+
+
+# Para corrigir: GITHUB PUSH PROTECTION
+1 - Click no link indicado na mesagem de erro como abaixo
+    ...
+    (?) To push, remove secret from commit(s) or follow this URL to allow the secret.
+    remote:        https://github.com/marcio72vieira/laravel-10/security/secret-scanning/unblock-secret/2i9cNDezVKANbKbEw9heflhP1KV
+    ...
+2 - Na caixa de mensagem que abrir, clique na opção: "falso positivo"
+
+
+# Criando a Api da aplicação
+  1 - marcio@marcio72:~/projetosdocker/laravel-10$ docker-compose exec app bash
+  2 - yourusername@d6041e83f429:/var/www$ php artisan make:controller Api\\SupportController --api
+
+
+
+
 

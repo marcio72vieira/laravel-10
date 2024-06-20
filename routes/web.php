@@ -21,6 +21,7 @@ Route::get('/', function () {return view('welcome');});
 //Route::get('/test', function() { dd(SupportStatus::cases()); });
 Route::get('/test', function() { dd(array_column(SupportStatus::cases(), 'name')); });
 
+// Route::resource('/supports', SupportController::class);
 Route::delete('/supports/{id}', [SupportController::class, 'destroy'])->name('supports.destroy');
 Route::get('/supports/{id}/edit', [SupportController::class, 'edit'])->name('supports.edit');
 Route::put('/supports/{id}', [SupportController::class, 'update'])->name('supports.update');
