@@ -65,6 +65,10 @@
   2 - yourusername@d6041e83f429:/var/www$ php artisan make:controller Api\\SupportController --api
 
 
+#token do dia
+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
+
+
 
 
 

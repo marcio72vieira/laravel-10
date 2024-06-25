@@ -6,6 +6,7 @@
 
 <table border="1">
     <thead>
+        <th>#Id</th>
         <th>Assunto</th>
         <th>Status</th>
         <th>Descrição</th>
@@ -14,6 +15,7 @@
     <tbody>
         @foreach ($supports->items() as $support)
             <tr>
+                <td>{{ $support->id }}</td>
                 <td>{{ $support->subject }}</td>
                 <td>{{ getStatusSupport($support->status) }}</td>
                 <td>{{ $support->body }}</td>
