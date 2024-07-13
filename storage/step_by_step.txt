@@ -13,6 +13,8 @@
   a) docker stop $(docker ps -a -q)
 # Para executar no browser:
   a) http://localhost:8989 (Este é o conteúdo da variáveld e ambiente: APP_URL=http://localhost:8989 no arquivo .env)
+  b) http://localhost:8989/supports
+  
 
 
 
