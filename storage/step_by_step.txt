@@ -1,6 +1,7 @@
 # Para executar a aplicação:
   a) docker-compose up -d (Levanta todos os containers/serviços localizados dentro do arquivo: docker-compose.yml)
 # Para executar o bash (pasta /var/www):
+  a) docker exec -it laravel-10_app_1 bash
   a) docker-compose exec app bash
 # Para sair do bash (pasta /var/www):
   a) exit
@@ -14,8 +15,12 @@
 # Para executar no browser:
   a) http://localhost:8989 (Este é o conteúdo da variáveld e ambiente: APP_URL=http://localhost:8989 no arquivo .env)
   b) http://localhost:8989/supports
-  
 
+
+# Para ver e escolheer as várias versões do php ou java
+  sudo update-alternatives --config php
+  sudo update-alternatives --config java
+  
 
 
 # Para conectar ao serviço do mysql rodando via docker (O container/serviço, já deve está "levantado via: docker-compose up -d)
@@ -69,6 +74,114 @@
 
 #token do dia
 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
+
+Site de instalação do node, npm e nvm
+https://monovm.com/blog/install-npm-on-ubuntu/#Install-Node.js-and-npm-from-the-Ubuntu
+https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
+
+# Criando a autenticação com breeeze
+1 - composer require laravel/breeze --dev
+
+2 - Navegue para a página:  https://github.com/laravel/laravel/
+3 - Escolha o forque 10.x
+4 - Copie o conteúdo do arquivo package.json do site e substitua pelo conteúdo do arquivo package.json local
+5 - Faça uma cópia do arquivo routes/web.php para web_original.php
+
+5 - php artisan breeze:install
+    Escolher:
+      stack: 0(blade)
+      mode dark: y(sim)
+      test prefer Pest: (no - PhpUnit, default)
+
+      Serão Criados:
+        Irá criar a pasta Http/Controllers/Auth, com todos os controladores da autenticação
+        Irá criar a pasta Http/Requests/Auth, com todos as requests de validação para autenticação
+        Irá criar o arquivo na pasta Http/Controllers/ProfileController.php com todos os métodos para o perfil da autenticação
+        Irá criar as views de autenticação na pasta resource/views/auth
+        Irá criar as views de profiele na pasta resource/views/ProfileController
+        Irá acrescentar todos os componentes criados para autenticação na pasta resources/views/componentes
+        Irá criar a pasta resources/views/layouts para as views de autenticação (app, guest e navigations)
+        Irá criar a pasta resources/views/profile para as views de profile (app, guest e navigations)
+        Irá criar o arquivo resources/views/dashboard.blade.php para o dashboard da aplicação
+        Irá colocar um link de "register" e "login" na view de welcome.blade.php (view inicial da aplicação)
+        Irá acrescentar o arquivo auth.php na pasta routes, onde irá conter todas as todas criadas para autenticação
+
+
+6 - Acrescente o conteúdo das rotas do arquivo routes/web_original.php ao arquivo routes/web.php, dentro do grupo:
+    Route::middleware('auth')->group(function () { 
+      ...
+      rotas angigas aqui!
+    }
+
+    
+
+7 - Digite npm install para instalar todas as dependencia do arquivo package.json
+
+8 - Digite npm install
+
+9 - Digite npm run dev
+
+
+
+
+=======================================================================================================
+Executando os comandos dentro do container em execução laravel-10_app_1, pois o PHP do container é 8.1
+diferente da minha máquina local, que é 7.4 pois só os comandos abaixo, não iriam funcionar devido a 
+incompatibilidade de versões do php já que o arquivo package.json foi modigicado nos passos anteriores
+=======================================================================================================
+docker exec -it laravel-10_app_1 php artisan
+docker exec -it ccbd68b97376 php artisan
+
+docker exec -it laravel-10_app_1 composer require laravel/breeze --dev
+docker exec -it ccbd68b97376 composer require laravel/breeze --dev
+
+docker exec -it laravel-10_app_1 php artisan breeze:install
+docker exec -it ccbd68b97376 php artisan breeze:install
+
+Na minha máquina local, trocar a versão do node com os comandos:
+nvm ls (Listando as versões do node em minha máquina através do nvm)
+nvm use 22.4 (Colocando em uso o node versão 22.4 ao invés da versão 14.4, que é a padrão na minha máquina)
+npm install
+npm run dev
+
+Credenciais mailtrap:
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=c9b77ce14d9056
+MAIL_PASSWORD=***********1e8d (No MailTrap, coloque o mouse em cima do campo Passwword para "click to copy" e obter a senha que está truncada com *****)
+MAIL_FROM_ADDRESS="contato@especializati.com.br"
+MAIL_FROM_NAME="${APP_NAME}"
+
+Depois de configurar as credenciais de E-mail, executar:
+marcio@vaio:~$ docker exec -it laravel-10_app_1 bash (para entrar no bash do container)
+yourusername@ccbd68b97376:/var/www$ composer dump-autoload (para otimizar a aplicação,já que foi alterado o arquivo .env)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
