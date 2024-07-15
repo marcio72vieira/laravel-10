@@ -20,6 +20,11 @@
 # Para ver e escolheer as várias versões do php ou java
   sudo update-alternatives --config php
   sudo update-alternatives --config java
+
+# Para rodar a aplicação
+  docker ps -a
+  docker-compose up -d
+  docker exec -it laravel-10_app_1 bash (Entrar no bash da aplicação para executar comandos artisan baseado no Php 8.1)
   
 
 
@@ -52,7 +57,7 @@
 
 
   token atual:
-  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
+  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
 
 
 # (?) Learn how to resolve a blocked push https://docs.github.com/code-security/secret-scanning/pushing-a-branch-blocked-by-push-protection
@@ -79,7 +84,14 @@ Site de instalação do node, npm e nvm
 https://monovm.com/blog/install-npm-on-ubuntu/#Install-Node.js-and-npm-from-the-Ubuntu
 https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
 
+####################################
 # Criando a autenticação com breeeze
+#####################################
+0 - A partir daqui, sempre que for executar a aplicação no browse digitar:
+    nvm ls
+    nvm use 22.4
+    npm run dev
+
 1 - composer require laravel/breeze --dev
 
 2 - Navegue para a página:  https://github.com/laravel/laravel/
@@ -120,6 +132,117 @@ https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
 8 - Digite npm install
 
 9 - Digite npm run dev
+
+###########################################
+# Autenticando Usuários na API com Sanctum
+###########################################
+1 - Entrar no bash do container da aplicação a partir da máquina host:
+    marcio@vaio:~/projetosdocker/laravel-10$ docker exec -it laravel-10_app_1 bash
+
+2 - Instalar o Sanctum a partir do container:
+    yourusername@ccbd68b97376:/var/www$ composer require laravel/sanctum
+
+3 - Publicar, criar o arquivo sanctum.php na pasta /config a partir de sua publicação:
+    yourusername@ccbd68b97376:/var/www$ php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
+4 - Rodar a migration fornecida pelo Sanctum (A partir do Laravel 10, essa migration é padrão no Laravel):
+    yourusername@ccbd68b97376:/var/www$ php artisan migrate
+
+5 - Acrescentar a trait abaixo em app/Models/User.php, como abaixo:
+    use Laravel\Sanctum\HasApiTokens;
+
+    class User extends Authenticatable
+    {
+      use HasApiTokens, HasFactory, Notifiable;
+    
+6 - Pegar um usuário autenticado e criar um token de acesso, seguindo os passos:
+    a)  Criar a rota, dentro de: routes/api.php
+        Route::post('/login', [AuthApiController::class, 'login']);
+
+    b)  Criar o controle dentro de app/Http/Controllers/Api/Auth
+        yourusername@ccbd68b97376:/var/www$ php artisan make:controller Api/Auth/AuthApiController
+
+    c)  importar o novo controller criado (AuthApiController), no arquivo de rotas da api (routes/api.php)
+        use App\Http\Controllers\Api\Auth\AuthApiController;
+
+    d)  Criar o método "login" no controller AuthApiController
+        d.1 - Importar: 
+              use App\Models\User;
+              use Illuminate\Support\Facades\Hash;
+              use Illuminate\Validation\ValidationException;
+
+        
+        d.2 - public funcion login (Request $request) {
+                $credential = $request->only(['email', 'password', 'device_name']);
+
+                $user = User::where('email', $request->email)->first();
+
+                // Hash::check($request->password, $user->password)
+
+                // Se não encontrou o usuário ou a senha está incorreta, lança uma exception.
+                if(!user || !Hash::check($request->password, $user->password)){
+                  throw ValidationException::withMessages([
+                    'email' => 'The credentials are incorrects'
+                  ]);
+                }
+
+                // Implementando um login único, deletando todos os tokens do usuário armazenado no banco.
+                // Deslogando o usuário de todos os outros dispositivos que o usuário estiver logado.
+                // Logout others devices
+                // if ($request->has('logout_others_devices)){$user->tokens()->delete();}
+                
+                $user->tokens()->delete();
+
+                // Se encontrou o usuário, cria um token para o mesmo, com o método createToken, extraido da trait(HasApiTokens) utilizada no model User
+                $token = $user->createToken($request->device_name)->plainTextToken;
+
+                return response()->json([
+                  'token' => $token
+                ]);
+
+
+        }
+
+7 - Operando no insomnia para Obter o Token
+    a)  Criar um nova pasta com o nome EspecializaTI
+        a.1 - Criar nova request com o nome "obter post" do tipo POST 
+        a.2 - Definir a URL da requisição: http://localhost:8989/api/login
+    
+    c)  Na aba "Body" Escolher Text: JSON
+    
+    d)  No corpo da aba JSON colocar o objeto abaixo:
+        {
+          "email": "ester@email.com",
+          "password": "12345678",
+          "device_name": "Insomnia"
+        }
+    
+    d)  Na aba "Headers" Definir:
+          Content-Type: application/json
+          Accept: application/json
+    
+    e)  Clicar no botão lilas "Send"
+
+    f)  Obterá como resposta, consideerando que é um usuário cadastrado:
+        {
+          "token": "1|1MDjCKaEi5Fa2ao7fmoHzUFdxQ55Dt533Jhu2e2Eaf01845a"
+        }
+    
+    g)  Obterá como resposta, considerando que é um usuário não cadastrado:
+        {
+          "message": "The credentials are incorrects",
+          "errors": {
+            "email": [
+              "The credentials are incorrects"
+            ]
+          }
+        }
+    
+
+    
+        
+
+
 
 
 
