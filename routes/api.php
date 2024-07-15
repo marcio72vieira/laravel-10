@@ -21,5 +21,13 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 */
 
 Route::post('/login', [AuthApiController::class, 'login']);
+Route::post('/logout', [AuthApiController::class, 'logout'])->middleware('auth:sanctum'); // Passando o middleware inline
+Route::get('/me', [AuthApiController::class, 'me'])->middleware('auth:sanctum');  // Passando o middleware inline
 
-Route::apiResource('/supports', SupportController::class);
+Route::middleware(['auth:sanctum'])->group(function(){
+    Route::apiResource('/supports', SupportController::class);
+});
+
+//Route::apiResource('/supports', SupportController::class);
+
+

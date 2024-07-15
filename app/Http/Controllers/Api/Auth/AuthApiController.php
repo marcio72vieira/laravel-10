@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\AuthRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +11,7 @@ use Illuminate\Validation\ValidationException;
 
 class AuthApiController extends Controller
 {
-    public function login (Request $request) {
+    public function login (AuthRequest $request) {
         $credential = $request->only([
             'email', 
             'password', 
@@ -42,5 +43,27 @@ class AuthApiController extends Controller
         return response()->json([
           'token' => $token
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+      // Delete todos os tokens do usuário autenticado
+      $request->user()->tokens()->delete();
+
+      // Retorna uma mensagem
+      return response()->json([
+        'message' => 'Logout successfully!'
+      ]);
+    }
+
+    // Retorna o usuário authenticado
+    public function me(Request $request)
+    {
+      $user = $request->user();
+
+      // Retorna o usuário authenticado
+      return response()->json([
+        'me' => $user
+      ]);
     }
 }

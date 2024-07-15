@@ -80,6 +80,7 @@
 #token do dia
 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
 
+
 Site de instalação do node, npm e nvm
 https://monovm.com/blog/install-npm-on-ubuntu/#Install-Node.js-and-npm-from-the-Ubuntu
 https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
@@ -210,12 +211,21 @@ https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
     
     c)  Na aba "Body" Escolher Text: JSON
     
-    d)  No corpo da aba JSON colocar o objeto abaixo:
+    d)  No corpo da aba JSON colocar os objetos (usuários cadastrados) abaixo:
         {
           "email": "ester@email.com",
           "password": "12345678",
           "device_name": "Insomnia"
         }
+
+        OU
+
+        {
+          "email": "marcio72vieira@gmail.com",
+          "password": "87654321",
+          "device_name": "Insomnia"
+        }
+    
     
     d)  Na aba "Headers" Definir:
           Content-Type: application/json
@@ -237,6 +247,97 @@ https://github.com/nvm-sh/nvm?tab=readme-ov-file#install--update-script
             ]
           }
         }
+
+8 - Aplicar em route/api.php o middleware para as rotas que se deseja está autenticado com o token fornecido,
+    ou seja, acessar recurso na API que requer autenticação.
+    a)  Forma 01 - Grupos de rotas
+        Route::middleware(['auth:sanctum'])->group(function(){
+            Route::apiResource('/supports', SupportController::class);
+        });
+    
+    b)  Forma 02 - Rotas específicas
+        Route::apiResource('/supports', SupportController::class);->middleware('auth');
+    
+9 - Operando no Insomnia para obter recursos, após a alteração das rotas em: route/api.php
+    a)  Faça uma cópia da requisição anterior "obter token" e modifique o verbo de POST para GET 
+        modifique a URL para: http://localhost:8989/api/supports
+    b)  Retire qualquer conteúdo do Body da requisição, ou seja, deixe-a limpa
+    c)  Acrescente além dos headers (Content-Type e Accept) o header: 
+        Authorization: Bearer 3|z1UxmUldNsMv0FRpfGWn452QHnBmn82Eb8dBNhsFfb7e6e2c 
+    d)  Click no botão lilás "Send"
+    e)  Será retornado o lista de registros cadastrados no banco
+    f)  Para obter o registro de índice "2", altere a URL para: http://localhost:8989/api/supports/2
+        Obs: Altere alguma letra no "token" gerado, irá retornar
+              {
+                "message": "Unauthenticated."
+              }
+
+10 -  Validando as informaçoes fornecidas para o login no AuthApiController
+      a)  Criar a request AuthRequest com:
+          yourusername@ccbd68b97376:/var/www$ php artisan make:request Api/AuthRequest
+      
+      b)  Alterar os métodos conforme definido abaixo:
+          public function authorize(): bool
+          {
+              return true;
+          }
+    
+          public function rules(): array
+          {
+              return [
+                  'email' => ['required', 'email', 'max:255'],
+                  'password' => ['required','max:255'],
+                  'device_name' => ['required','max:255']
+              ];
+          }
+  
+      c)  Injetar a request AuthRequest no método login do controller AuthApiController como abaixo:
+          use App\Http\Requests\Api\AuthRequest;
+
+          public function login (AuthRequest $request) {
+            ...
+          }
+
+11 -  Criando o "logout" para revogar um token específico. O usuário deverá está logado para realizar o logout
+      a)  Criar a rota em routes/api.php
+          Route::post('/logout', [AuthApiController::class, 'logout'])->middleware('auth:sanctum');
+      
+      b)  Criar o método loguot no controller AuthApiController, conforme abaixo:
+          public function logout(Request $request)
+          {
+            // Delete todos os tokens do usuário autenticado
+            $request->user()->tokens()->delete();
+
+            // Retorna uma mensagem
+            return response()->json([
+              'message' => 'Logout successfully!'
+            ]);
+          }
+      
+      c)  Criar método para retornar o usuário authenticado
+          // Retorna o usuário authenticado
+          public function me(Request $request)
+          {
+            $user = $request->user();
+
+            // Retorna o usuário authenticado
+            return response()->json([
+              'me' => $user
+            ]);
+          }
+      
+      d)  Acrescentar a nova rota para obter o usuário authenticado em routes/api.php. Nesse caso, será passado o middleware inline
+          Route::get('/me', [AuthApiController::class, 'me'])->middleware('auth:sanctum');
+
+12 -  No Insomnia, para as rotas de logout e me, deve-se sempre alterar o token obtido no header: Authorization Bearer conforme o token obtido
+
+
+
+
+    
+
+
+
     
 
     
